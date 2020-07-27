@@ -8,6 +8,8 @@ import NewPost from "../components/NewPost";
 
 export default new VueRouter({
     mode: "history",
+    linkActiveClass: "active",
+    linkExactActiveClass: "exact-active",
     routes: [
         {
             path: "/",

@@ -20,12 +20,12 @@
 
         <!-- Right Side Of Navbar -->
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <router-link to="/post-list" class="nav-link font-weight-bold">Post List</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/add-new-post" class="nav-link font-weight-bold">Add New Post</router-link>
-          </li>
+          <router-link to="/post-list" tag="li" class="nav-item">
+            <a href="#" class="nav-link font-weight-bold">Post List</a>
+          </router-link>
+          <router-link to="/add-new-post" tag="li" class="nav-item">
+            <a href="#" class="nav-link font-weight-bold">Add New Post</a>
+          </router-link>
         </ul>
       </div>
     </div>

@@ -41762,39 +41762,48 @@ var render = function() {
             [
               _c("ul", { staticClass: "navbar-nav mr-auto" }),
               _vm._v(" "),
-              _c("ul", { staticClass: "navbar-nav ml-auto" }, [
-                _c(
-                  "li",
-                  { staticClass: "nav-item" },
-                  [
-                    _c(
-                      "router-link",
-                      {
-                        staticClass: "nav-link font-weight-bold",
-                        attrs: { to: "/post-list" }
-                      },
-                      [_vm._v("Post List")]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "li",
-                  { staticClass: "nav-item" },
-                  [
-                    _c(
-                      "router-link",
-                      {
-                        staticClass: "nav-link font-weight-bold",
-                        attrs: { to: "/add-new-post" }
-                      },
-                      [_vm._v("Add New Post")]
-                    )
-                  ],
-                  1
-                )
-              ])
+              _c(
+                "ul",
+                { staticClass: "navbar-nav ml-auto" },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      staticClass: "nav-item",
+                      attrs: { to: "/post-list", tag: "li" }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "nav-link font-weight-bold",
+                          attrs: { href: "#" }
+                        },
+                        [_vm._v("Post List")]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "router-link",
+                    {
+                      staticClass: "nav-item",
+                      attrs: { to: "/add-new-post", tag: "li" }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "nav-link font-weight-bold",
+                          attrs: { href: "#" }
+                        },
+                        [_vm._v("Add New Post")]
+                      )
+                    ]
+                  )
+                ],
+                1
+              )
             ]
           )
         ],
@@ -57855,6 +57864,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: "history",
+  linkActiveClass: "active",
+  linkExactActiveClass: "exact-active",
   routes: [{
     path: "/",
     redirect: "/post-list"
