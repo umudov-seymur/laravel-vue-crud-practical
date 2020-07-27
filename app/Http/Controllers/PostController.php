@@ -23,7 +23,6 @@ class PostController extends Controller
         } else {
             $posts = Post::latest();
         }
-
         return new PostCollection($posts->paginate(5));
     }
 
@@ -37,29 +36,6 @@ class PostController extends Controller
     {
         // $newPath = $request->file('photo')->store('photos');
         return Post::create($request->except('photo'));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $post)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Post $post)
-    {
-        //
     }
 
     /**
