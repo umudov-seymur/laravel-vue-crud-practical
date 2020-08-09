@@ -3,8 +3,9 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-import PostList from "../components/PostList";
-import NewPost from "../components/NewPost";
+const PostList = () => import("../components/PostList");
+const NewPost = () => import("../components/NewPost");
+const EditPost = () => import("../components/EditPost");
 
 export default new VueRouter({
     mode: "history",
@@ -17,11 +18,22 @@ export default new VueRouter({
         },
         {
             path: "/post-list",
-            component: PostList
+            component: PostList,
+            name: "post-list"
         },
         {
             path: "/add-new-post",
             component: NewPost
+        },
+        {
+            path: "/edit-post/:postId",
+            component: EditPost,
+            name: "post.edit"
+        },
+        {
+            path: "*",
+            name: "404",
+            component: PostList
         }
     ]
 });

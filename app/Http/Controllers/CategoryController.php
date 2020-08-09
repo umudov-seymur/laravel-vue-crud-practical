@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Http\Resources\CategoryCollection;
 
 class CategoryController extends Controller
 {
@@ -13,6 +14,6 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Category::all();
+        return new CategoryCollection(Category::all());
     }
 }

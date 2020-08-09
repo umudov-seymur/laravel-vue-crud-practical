@@ -23,7 +23,7 @@ export default {
       this.$emit("input", event.target.value);
     },
     getCategories() {
-      axios.get(`api/categories`).then((res) => {
+      axios.get(`/api/categories`).then((res) => {
         this.categories = res.data;
       });
     },

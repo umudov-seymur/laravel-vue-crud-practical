@@ -1,10 +1,6 @@
 <template>
   <div class="mt-5">
-    <div class="text-center" v-if="loading">
-      <div class="spinner-border text-primary" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
+    <Loading v-if="loading" />
     <div v-else>
       <Category class="mb-3" :selectedId="category" v-model="category" />
       <table class="table">
@@ -18,6 +14,7 @@
               </router-link>
             </th>
             <th scope="col">Post text</th>
+            <th scope="col">Category</th>
             <th scope="col">Created date</th>
             <th scope="col">Actions</th>
           </tr>
@@ -27,11 +24,18 @@
             <th scope="row">#{{ post.id }}</th>
             <td>{{ post.title }}</td>
             <td>{{ post.text }}</td>
+            <td>
+              <span class="badge badge-success badge-lg">{{ post.category.name }}</span>
+            </td>
             <td>{{ post.created_at }}</td>
             <td>
-              <button class="btn btn-sm btn-success">
+              <router-link
+                :to="{name: 'post.edit',params: {postId: post.id}}"
+                class="btn btn-sm btn-success"
+                tag="button"
+              >
                 <i class="fa fa-edit"></i> Edit
-              </button>
+              </router-link>
               <button class="btn btn-sm btn-danger ml-1" @click="removePost(post.id)">
                 <i class="fa fa-remove"></i> Delete
               </button>
@@ -49,6 +53,7 @@
 import Swal from "sweetalert2";
 import Alert from "./Alert";
 import Category from "./Category";
+import Loading from "./Loading";
 
 export default {
   data() {
@@ -71,7 +76,10 @@ export default {
   },
   watch: {
     category(id) {
-      this.getResults(this.currentPage);
+      this.getResults(1);
+      this.routeChange({
+        category: id,
+      });
     },
     currentPage(page) {
       this.routeChange({
@@ -82,17 +90,17 @@ export default {
   },
   methods: {
     getResults(page = 1) {
-      let category = this.category > 0 ? `&category=${this.category}` : "";
+      let category = this.category !== null ? `&category=${this.category}` : "";
       this.loading = true;
 
-      axios.get(`api/posts?page=${page}${category}`).then((res) => {
+      axios.get(`/api/posts?page=${page}${category}`).then((res) => {
         this.posts = res.data;
         this.loading = false;
         this.currentPage = page;
       });
     },
     removePost(id) {
-      axios.delete(`api/posts/${id}`).then((res) => {
+      axios.delete(`/api/posts/${id}`).then((res) => {
         Swal.fire("Good job!", "Removed successfull", "success");
         this.getResults(this.currentPage);
       });
@@ -109,6 +117,7 @@ export default {
   components: {
     Alert,
     Category,
+    Loading,
   },
 };
 </script>

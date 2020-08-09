@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
+use App\Http\Resources\PostSingle;
 use App\Http\Resources\PostCollection;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        // request()->headers->set('Accept', 'application/json');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,10 +29,10 @@ class PostController extends Controller
         } else {
             $posts = Post::latest();
         }
-        return new PostCollection($posts->paginate(5));
+        return new PostCollection($posts->with('category')->paginate(5));
     }
 
-    /**
+    /*
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -36,6 +42,17 @@ class PostController extends Controller
     {
         // $newPath = $request->file('photo')->store('photos');
         return Post::create($request->except('photo'));
+    }
+
+    /**
+    * Store a newly created resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
+    public function show(Request $request, Post $post)
+    {
+        return new PostSingle($post);
     }
 
     /**

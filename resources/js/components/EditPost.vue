@@ -3,7 +3,8 @@
     <Alert type="danger" v-if="validationErrors.length > 0">
       <p class="m-0 p-0" v-for="(error, index) in validationErrors" v-text="error" :key="index"></p>
     </Alert>
-    <form @submit.prevent="savePost">
+    <Loading v-if="loading" />
+    <form @submit.prevent="updatePost" v-else>
       <div class="form-group">
         <label class="font-weight-bold" for="title">Post title</label>
         <input type="text" class="form-control" id="title" v-model="post.title" />
@@ -14,7 +15,7 @@
       </div>
       <div class="form-group">
         <label class="font-weight-bold" for="category">Category</label>
-        <Category v-model="post.category_id" />
+        <Category v-model="post.category_id" :selected-id="post.category_id" />
       </div>
       <div class="form-group">
         <label class="font-weight-bold" for="category">Thumbnail</label>
@@ -24,52 +25,46 @@
         </div>
       </div>
       <hr />
-      <button type="submit" class="btn btn-primary" :disabled="disabled">Submit</button>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
 </template>
 
 <script>
-import Swal from "sweetalert2";
+import Loading from "./Loading";
 import Mixin from "../mixin/index";
-import isEmptyObject from "../helpers";
 
 export default {
   mixins: [Mixin],
+  data() {
+    return {
+      loading: true,
+    };
+  },
+  created() {
+    this.checkPost(this.$route.params.postId);
+  },
   methods: {
-    savePost() {
-      const data = new FormData();
-      Object.keys(this.post).forEach((key) => {
-        data.append(key, this.post[key]);
-      });
-
+    checkPost(id) {
       axios
-        .post(`/api/posts`, data)
+        .get(`/api/posts/${id}`)
         .then((res) => {
-          if (res.data) {
-            this.errors = {};
-            this.post = {};
-            Swal.fire(
-              "Good job!",
-              "Post successfull added to system",
-              "success"
-            );
-            this.$router.push("/");
-          }
+          this.post = res.data;
+          this.loading = false;
         })
-        .catch((err) => {
-          this.errors = err.response.data.errors;
+        .catch((e) => {
+          this.$router.push({ name: "404" });
         });
     },
   },
-  beforeRouteLeave(to, from, next) {
-    if (!isEmptyObject(this.post)) {
-      const answer = window.confirm(
-        "Do you really want to leave? you have unsaved changes!"
-      );
-      next(answer);
-    } else {
+  components: {
+    Loading,
+  },
+  beforeRouteEnter: (to, from, next) => {
+    if (!isNaN(to.params.postId)) {
       next();
+    } else {
+      next({ name: "404" });
     }
   },
 };
