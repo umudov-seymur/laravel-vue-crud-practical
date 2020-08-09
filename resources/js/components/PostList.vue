@@ -25,7 +25,7 @@
             <td>{{ post.title }}</td>
             <td>{{ post.text }}</td>
             <td>
-              <span class="badge badge-success badge-lg">{{ post.category.name }}</span>
+              <span class="badge badge-info text-white shadow p-2">{{ post.category.name }}</span>
             </td>
             <td>{{ post.created_at }}</td>
             <td>
