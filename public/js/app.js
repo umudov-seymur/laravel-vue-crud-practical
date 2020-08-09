@@ -53789,7 +53789,7 @@ var NewPost = function NewPost() {
 };
 
 var EditPost = function EditPost() {
-  return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ../components/EditPost */ "./resources/js/components/EditPost.vue"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ../components/EditPost */ "./resources/js/components/EditPost.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({

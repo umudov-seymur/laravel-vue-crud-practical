@@ -4,7 +4,7 @@
       <p class="m-0 p-0" v-for="(error, index) in validationErrors" v-text="error" :key="index"></p>
     </Alert>
     <Loading v-if="loading" />
-    <form @submit.prevent="updatePost" v-else>
+    <form @submit.prevent="updatePost" @keyup.ctrl.enter="updatePost" v-else>
       <div class="form-group">
         <label class="font-weight-bold" for="title">Post title</label>
         <input type="text" class="form-control" id="title" v-model="post.title" />
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import Loading from "./Loading";
 import Mixin from "../mixin/index";
 
@@ -45,6 +46,21 @@ export default {
     this.checkPost(this.$route.params.postId);
   },
   methods: {
+    updatePost() {
+      this.loading = true;
+      axios
+        .patch(`/api/posts/${this.post.id}`, this.post)
+        .then((res) => {
+          this.errors = {};
+          this.loading = false;
+          Swal.fire("Good job!", "Post successfull updated!", "success");
+          this.$router.push({ name: "post-list" });
+        })
+        .catch((err) => {
+          this.loading = false;
+          this.errors = err.response.data.errors;
+        });
+    },
     checkPost(id) {
       axios
         .get(`/api/posts/${id}`)

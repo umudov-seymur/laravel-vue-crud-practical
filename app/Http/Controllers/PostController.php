@@ -56,6 +56,19 @@ class PostController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(PostRequest $request, Post $post)
+    {
+        $post->update($request->validated());
+        return $post;
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Post  $post
