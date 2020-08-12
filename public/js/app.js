@@ -53781,7 +53781,7 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
 var PostList = function PostList() {
-  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(2)]).then(__webpack_require__.bind(null, /*! ../components/PostList */ "./resources/js/components/PostList.vue"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(4), __webpack_require__.e(2)]).then(__webpack_require__.bind(null, /*! ../components/PostList */ "./resources/js/components/PostList.vue"));
 };
 
 var NewPost = function NewPost() {
@@ -53789,7 +53789,7 @@ var NewPost = function NewPost() {
 };
 
 var EditPost = function EditPost() {
-  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ../components/EditPost */ "./resources/js/components/EditPost.vue"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1)]).then(__webpack_require__.bind(null, /*! ../components/EditPost */ "./resources/js/components/EditPost.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({

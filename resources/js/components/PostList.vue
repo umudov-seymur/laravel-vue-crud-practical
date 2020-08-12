@@ -3,7 +3,7 @@
     <Loading v-if="loading" />
     <div v-else>
       <Category class="mb-3" :selectedId="category" v-model="category" />
-      <table class="table">
+      <table class="table table-bordered">
         <thead class="text-primary font-weight-bold">
           <tr>
             <th scope="col">#</th>
@@ -19,7 +19,7 @@
             <th scope="col">Actions</th>
           </tr>
         </thead>
-        <tbody class="font-weight-bold">
+        <draggable v-model="posts.data" class="font-weight-bold" tag="tbody" v-bind="dragOptions">
           <tr v-for="(post, index) in posts.data" :key="index">
             <th scope="row">#{{ post.id }}</th>
             <td>{{ post.title }}</td>
@@ -41,7 +41,7 @@
               </button>
             </td>
           </tr>
-        </tbody>
+        </draggable>
       </table>
       <hr />
       <pagination :data="posts" @pagination-change-page="getResults"></pagination>
@@ -54,13 +54,16 @@ import Swal from "sweetalert2";
 import Alert from "./Alert";
 import Category from "./Category";
 import Loading from "./Loading";
+import draggable from "vuedraggable";
 
 export default {
+  order: 1,
   data() {
     return {
       posts: {
         data: {},
       },
+      list: [],
       category: null,
       loading: true,
       currentPage: null,
@@ -114,10 +117,21 @@ export default {
         .catch((e) => {});
     },
   },
+  computed: {
+    dragOptions() {
+      return {
+        animation: 200,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost",
+      };
+    },
+  },
   components: {
     Alert,
     Category,
     Loading,
+    draggable,
   },
 };
 </script>
