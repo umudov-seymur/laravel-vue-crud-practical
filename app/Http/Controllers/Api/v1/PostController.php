@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Post;
 use Illuminate\Http\Request;
@@ -10,11 +10,6 @@ use App\Http\Resources\PostCollection;
 
 class PostController extends Controller
 {
-    public function __construct()
-    {
-        // request()->headers->set('Accept', 'application/json');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -25,9 +20,9 @@ class PostController extends Controller
         if ($request->has('category')) {
             $posts = Post::whereHas('category', fn ($query) => $query
                 ->where('category_id', $request->category))
-                ->latest();
+                ->oldest('order');
         } else {
-            $posts = Post::latest();
+            $posts = Post::oldest('order');
         }
         return new PostCollection($posts->with('category')->paginate(5));
     }
@@ -66,6 +61,18 @@ class PostController extends Controller
     {
         $post->update($request->validated());
         return $post;
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAll(Request $request)
+    {
+        dd($request->all());
     }
 
     /**

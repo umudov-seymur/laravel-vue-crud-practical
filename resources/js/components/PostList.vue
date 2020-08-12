@@ -19,8 +19,13 @@
             <th scope="col">Actions</th>
           </tr>
         </thead>
-        <draggable v-model="posts.data" class="font-weight-bold" tag="tbody" v-bind="dragOptions">
-          <tr v-for="(post, index) in posts.data" :key="index">
+        <draggable
+          v-model="newOrderedPosts"
+          class="font-weight-bold"
+          tag="tbody"
+          v-bind="dragOptions"
+        >
+          <tr v-for="(post, index) in newOrderedPosts" :key="index">
             <th scope="row">#{{ post.id }}</th>
             <td>{{ post.title }}</td>
             <td>{{ post.text }}</td>
@@ -44,7 +49,7 @@
         </draggable>
       </table>
       <hr />
-      <pagination :data="posts" @pagination-change-page="getResults"></pagination>
+      <pagination :data="posts" @pagination-change-page="getResults" :show-disabled="false"></pagination>
     </div>
   </div>
 </template>
@@ -63,7 +68,7 @@ export default {
       posts: {
         data: {},
       },
-      list: [],
+      newOrderedPosts: [],
       category: null,
       loading: true,
       currentPage: null,
@@ -90,17 +95,32 @@ export default {
         category: this.category || undefined,
       });
     },
+    newOrderedPosts(posts) {
+      posts.map((post, index) => {
+        post.order = index + 1;
+      });
+      axios
+        .put("api/posts/update-all", { posts: this.newOrderedPosts })
+        .then((res) => {
+          console.log(res);
+        });
+    },
   },
   methods: {
     getResults(page = 1) {
       let category = this.category !== null ? `&category=${this.category}` : "";
       this.loading = true;
 
-      axios.get(`/api/posts?page=${page}${category}`).then((res) => {
-        this.posts = res.data;
-        this.loading = false;
-        this.currentPage = page;
-      });
+      axios
+        .get(`/api/posts?page=${page}${category}`)
+        .then((res) => {
+          this.loading = false;
+          this.posts = res.data;
+          this.currentPage = page;
+        })
+        .then(() => {
+          this.newOrderedPosts = this.posts.data;
+        });
     },
     removePost(id) {
       axios.delete(`/api/posts/${id}`).then((res) => {

@@ -14,7 +14,7 @@ class CreateAddOrderToPostsTable extends Migration
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->integer('order')->default(1);
+            $table->integer('order')->after('category_id')->default(1);
         });
     }
 

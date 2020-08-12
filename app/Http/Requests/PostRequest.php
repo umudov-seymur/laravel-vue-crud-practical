@@ -26,6 +26,7 @@ class PostRequest extends FormRequest
         return [
             'title' => 'required|max:255',
             'text' => 'required|max:255',
+            'order' => 'integer',
             'category_id' => 'required|integer|exists:categories,id',
             'photo' => 'image'
         ];

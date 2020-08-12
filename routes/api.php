@@ -18,5 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('posts', 'PostController');
-Route::apiResource('categories', 'CategoryController')->only('index');
+Route::group(['prefix' => 'v1', 'namespace' => 'Api\V1'], function () {
+    Route::apiResource('posts', 'PostController');
+    Route::put('posts/update-all', 'PostController@updateAll');
+    Route::apiResource('categories', 'CategoryController')->only('index');
+});
