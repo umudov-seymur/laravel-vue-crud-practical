@@ -83,8 +83,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Loading */ "./resources/js/components/Loading.vue");
-/* harmony import */ var _mixin_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../mixin/index */ "./resources/js/mixin/index.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Loading */ "./resources/js/components/Loading.vue");
+/* harmony import */ var _mixin_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../mixin/index */ "./resources/js/mixin/index.js");
 //
 //
 //
@@ -117,10 +119,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mixins: [_mixin_index__WEBPACK_IMPORTED_MODULE_1__["default"]],
+  mixins: [_mixin_index__WEBPACK_IMPORTED_MODULE_2__["default"]],
   data: function data() {
     return {
       loading: true
@@ -130,21 +133,38 @@ __webpack_require__.r(__webpack_exports__);
     this.checkPost(this.$route.params.postId);
   },
   methods: {
-    checkPost: function checkPost(id) {
+    updatePost: function updatePost() {
       var _this = this;
 
-      axios.get("/api/posts/".concat(id)).then(function (res) {
-        _this.post = res.data;
+      this.loading = true;
+      axios.patch("/api/posts/".concat(this.post.id), this.post).then(function (res) {
+        _this.errors = {};
         _this.loading = false;
-      })["catch"](function (e) {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire("Good job!", "Post successfull updated!", "success");
+
         _this.$router.push({
+          name: "post-list"
+        });
+      })["catch"](function (err) {
+        _this.loading = false;
+        _this.errors = err.response.data.errors;
+      });
+    },
+    checkPost: function checkPost(id) {
+      var _this2 = this;
+
+      axios.get("/api/posts/".concat(id)).then(function (res) {
+        _this2.post = res.data;
+        _this2.loading = false;
+      })["catch"](function (e) {
+        _this2.$router.push({
           name: "404"
         });
       });
     }
   },
   components: {
-    Loading: _Loading__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Loading: _Loading__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     if (!isNaN(to.params.postId)) {
@@ -302,6 +322,18 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
+                  return _vm.updatePost($event)
+                },
+                keyup: function($event) {
+                  if (
+                    !$event.type.indexOf("key") &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  if (!$event.ctrlKey) {
+                    return null
+                  }
                   return _vm.updatePost($event)
                 }
               }

@@ -18,8 +18,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1', 'namespace' => 'Api\V1'], function () {
-    Route::apiResource('posts', 'PostController');
-    Route::put('posts/update-all', 'PostController@updateAll');
+Route::group(['namespace' => 'Api'], function () {
+    // posts
+    Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
+        Route::put('/update-all', 'PostController@updateAll')->name('update.order');
+        Route::apiResource('/', 'PostController')->parameters(['' => 'post']);
+    });
+
+    // post categories
     Route::apiResource('categories', 'CategoryController')->only('index');
 });

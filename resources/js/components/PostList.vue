@@ -22,6 +22,7 @@
         <draggable
           v-model="newOrderedPosts"
           class="font-weight-bold"
+          @change="updateOrderPost"
           tag="tbody"
           v-bind="dragOptions"
         >
@@ -96,14 +97,10 @@ export default {
       });
     },
     newOrderedPosts(posts) {
+      let order = this.posts.meta.from;
       posts.map((post, index) => {
-        post.order = index + 1;
+        post.order = order + (index + 1);
       });
-      axios
-        .put("api/posts/update-all", { posts: this.newOrderedPosts })
-        .then((res) => {
-          console.log(res);
-        });
     },
   },
   methods: {
@@ -111,16 +108,17 @@ export default {
       let category = this.category !== null ? `&category=${this.category}` : "";
       this.loading = true;
 
+      axios.get(`/api/posts?page=${page}${category}`).then((res) => {
+        this.loading = false;
+        this.posts = res.data;
+        this.currentPage = page;
+        this.newOrderedPosts = this.posts.data;
+      });
+    },
+    updateOrderPost() {
       axios
-        .get(`/api/posts?page=${page}${category}`)
-        .then((res) => {
-          this.loading = false;
-          this.posts = res.data;
-          this.currentPage = page;
-        })
-        .then(() => {
-          this.newOrderedPosts = this.posts.data;
-        });
+        .put("/api/posts/update-all", { posts: this.newOrderedPosts })
+        .then((res) => {});
     },
     removePost(id) {
       axios.delete(`/api/posts/${id}`).then((res) => {

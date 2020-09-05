@@ -109,6 +109,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Alert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Alert */ "./resources/js/components/Alert.vue");
 /* harmony import */ var _Category__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Category */ "./resources/js/components/Category.vue");
 /* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Loading */ "./resources/js/components/Loading.vue");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.common.js");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_4__);
 //
 //
 //
@@ -160,16 +162,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  order: 1,
   data: function data() {
     return {
       posts: {
         data: {}
       },
+      newOrderedPosts: [],
       category: null,
       loading: true,
       currentPage: null,
@@ -196,6 +207,12 @@ __webpack_require__.r(__webpack_exports__);
         page: page,
         category: this.category || undefined
       });
+    },
+    newOrderedPosts: function newOrderedPosts(posts) {
+      var order = this.posts.meta.from;
+      posts.map(function (post, index) {
+        post.order = order + (index + 1);
+      });
     }
   },
   methods: {
@@ -206,10 +223,16 @@ __webpack_require__.r(__webpack_exports__);
       var category = this.category !== null ? "&category=".concat(this.category) : "";
       this.loading = true;
       axios.get("/api/posts?page=".concat(page).concat(category)).then(function (res) {
-        _this.posts = res.data;
         _this.loading = false;
+        _this.posts = res.data;
         _this.currentPage = page;
+        _this.newOrderedPosts = _this.posts.data;
       });
+    },
+    updateOrderPost: function updateOrderPost() {
+      axios.put("/api/posts/update-all", {
+        posts: this.newOrderedPosts
+      }).then(function (res) {});
     },
     removePost: function removePost(id) {
       var _this2 = this;
@@ -227,10 +250,21 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (e) {});
     }
   },
+  computed: {
+    dragOptions: function dragOptions() {
+      return {
+        animation: 200,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost"
+      };
+    }
+  },
   components: {
     Alert: _Alert__WEBPACK_IMPORTED_MODULE_1__["default"],
     Category: _Category__WEBPACK_IMPORTED_MODULE_2__["default"],
-    Loading: _Loading__WEBPACK_IMPORTED_MODULE_3__["default"]
+    Loading: _Loading__WEBPACK_IMPORTED_MODULE_3__["default"],
+    draggable: vuedraggable__WEBPACK_IMPORTED_MODULE_4___default.a
   }
 });
 
@@ -392,120 +426,155 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _c("table", { staticClass: "table" }, [
-                _c("thead", { staticClass: "text-primary font-weight-bold" }, [
-                  _c("tr", [
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
-                    _vm._v(" "),
-                    _c(
-                      "th",
-                      { attrs: { scope: "col" } },
-                      [
+              _c(
+                "table",
+                { staticClass: "table table-bordered" },
+                [
+                  _c(
+                    "thead",
+                    { staticClass: "text-primary font-weight-bold" },
+                    [
+                      _c("tr", [
+                        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+                        _vm._v(" "),
                         _c(
-                          "router-link",
-                          {
-                            attrs: {
-                              to: {
-                                path: "post-list",
-                                query: { order: "asc", page: _vm.currentPage }
-                              }
-                            }
-                          },
+                          "th",
+                          { attrs: { scope: "col" } },
                           [
-                            _vm._v("\n              Title\n              "),
-                            _c("i", { staticClass: "fa fa-arrow-up" })
-                          ]
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [
-                      _vm._v("Post text")
-                    ]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("Category")]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [
-                      _vm._v("Created date")
-                    ]),
-                    _vm._v(" "),
-                    _c("th", { attrs: { scope: "col" } }, [_vm._v("Actions")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  { staticClass: "font-weight-bold" },
-                  _vm._l(_vm.posts.data, function(post, index) {
-                    return _c("tr", { key: index }, [
-                      _c("th", { attrs: { scope: "row" } }, [
-                        _vm._v("#" + _vm._s(post.id))
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.title))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.text))]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "span",
-                          { staticClass: "badge badge-success badge-lg" },
-                          [_vm._v(_vm._s(post.category.name))]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.created_at))]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          _c(
-                            "router-link",
-                            {
-                              staticClass: "btn btn-sm btn-success",
-                              attrs: {
-                                to: {
-                                  name: "post.edit",
-                                  params: { postId: post.id }
-                                },
-                                tag: "button"
-                              }
-                            },
-                            [
-                              _c("i", { staticClass: "fa fa-edit" }),
-                              _vm._v(" Edit\n            ")
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-sm btn-danger ml-1",
-                              on: {
-                                click: function($event) {
-                                  return _vm.removePost(post.id)
+                            _c(
+                              "router-link",
+                              {
+                                attrs: {
+                                  to: {
+                                    path: "post-list",
+                                    query: {
+                                      order: "asc",
+                                      page: _vm.currentPage
+                                    }
+                                  }
                                 }
-                              }
+                              },
+                              [
+                                _vm._v("\n              Title\n              "),
+                                _c("i", { staticClass: "fa fa-arrow-up" })
+                              ]
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c("th", { attrs: { scope: "col" } }, [
+                          _vm._v("Post text")
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { attrs: { scope: "col" } }, [
+                          _vm._v("Category")
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { attrs: { scope: "col" } }, [
+                          _vm._v("Created date")
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { attrs: { scope: "col" } }, [
+                          _vm._v("Actions")
+                        ])
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "draggable",
+                    _vm._b(
+                      {
+                        staticClass: "font-weight-bold",
+                        attrs: { tag: "tbody" },
+                        on: { change: _vm.updateOrderPost },
+                        model: {
+                          value: _vm.newOrderedPosts,
+                          callback: function($$v) {
+                            _vm.newOrderedPosts = $$v
+                          },
+                          expression: "newOrderedPosts"
+                        }
+                      },
+                      "draggable",
+                      _vm.dragOptions,
+                      false
+                    ),
+                    _vm._l(_vm.newOrderedPosts, function(post, index) {
+                      return _c("tr", { key: index }, [
+                        _c("th", { attrs: { scope: "row" } }, [
+                          _vm._v("#" + _vm._s(post.id))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(post.title))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(post.text))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "span",
+                            {
+                              staticClass:
+                                "badge badge-info text-white shadow p-2"
                             },
-                            [
-                              _c("i", { staticClass: "fa fa-remove" }),
-                              _vm._v(" Delete\n            ")
-                            ]
+                            [_vm._v(_vm._s(post.category.name))]
                           )
-                        ],
-                        1
-                      )
-                    ])
-                  }),
-                  0
-                )
-              ]),
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(post.created_at))]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "btn btn-sm btn-success",
+                                attrs: {
+                                  to: {
+                                    name: "post.edit",
+                                    params: { postId: post.id }
+                                  },
+                                  tag: "button"
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-edit" }),
+                                _vm._v(" Edit\n            ")
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-sm btn-danger ml-1",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.removePost(post.id)
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-remove" }),
+                                _vm._v(" Delete\n            ")
+                              ]
+                            )
+                          ],
+                          1
+                        )
+                      ])
+                    }),
+                    0
+                  )
+                ],
+                1
+              ),
               _vm._v(" "),
               _c("hr"),
               _vm._v(" "),
               _c("pagination", {
-                attrs: { data: _vm.posts },
+                attrs: { data: _vm.posts, "show-disabled": false },
                 on: { "pagination-change-page": _vm.getResults }
               })
             ],

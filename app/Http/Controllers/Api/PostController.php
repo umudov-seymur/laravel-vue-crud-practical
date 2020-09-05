@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1;
+namespace App\Http\Controllers\Api;
 
 use App\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Http\Resources\PostSingle;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\PostCollection;
 
 class PostController extends Controller
@@ -72,7 +73,15 @@ class PostController extends Controller
      */
     public function updateAll(Request $request)
     {
-        dd($request->all());
+        foreach (Post::all() as $post) {
+            foreach ($request->posts as $newPost) {
+                if ($post->id === $newPost['id']) {
+                    $post->update(['order' => $newPost['order']]);
+                }
+            }
+        }
+
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -83,6 +92,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        return $post->delete();
+        $post->delete();
+        return ['success' => true];
     }
 }
